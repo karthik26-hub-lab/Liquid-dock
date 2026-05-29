@@ -1,0 +1,173 @@
+/* --- Theme Variables for Realistic Lighting --- */
+:root {
+  --bg-color: #e8e8ed;
+  --nav-bg: rgba(255, 255, 255, 0.7);
+  --nav-border-top: rgba(255, 255, 255, 0.8);
+  --nav-border-bottom: rgba(255, 255, 255, 0.3);
+  --icon-default: #8e8e93;
+  --icon-active: #000000;
+  
+  --glass-grad: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.1) 100%);
+  --glass-rim: inset 1px 1px 2px rgba(255, 255, 255, 0.9), inset -1px -1px 2px rgba(0, 0, 0, 0.05);
+  --glass-drop: 0 4px 12px rgba(0, 0, 0, 0.08);
+  
+  --shadow-low: 0 10px 30px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-high: 0 20px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] {
+  --bg-color: #0d0d0f;
+  --nav-bg: rgba(28, 28, 30, 0.65);
+  --nav-border-top: rgba(255, 255, 255, 0.15);
+  --nav-border-bottom: rgba(0, 0, 0, 0.4);
+  --icon-default: #636366;
+  --icon-active: #ffffff;
+  
+  --glass-grad: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 100%);
+  --glass-rim: inset 1px 1px 1px rgba(255, 255, 255, 0.2), inset -1px -1px 2px rgba(0, 0, 0, 0.3);
+  --glass-drop: 0 4px 12px rgba(0, 0, 0, 0.3);
+  
+  --shadow-low: 0 10px 30px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-high: 0 20px 40px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transition: background-color 0.5s ease;
+  overscroll-behavior-y: none; 
+}
+
+/* --- Theme Toggle Button --- */
+.theme-toggle {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--nav-border-top);
+  color: var(--icon-active);
+  padding: 10px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: var(--shadow-low);
+  transition: all 0.4s ease;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 10;
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+/* --- Floating Animation Physics --- */
+@keyframes ambientFloat {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+    box-shadow: var(--shadow-low);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-6px);
+    box-shadow: var(--shadow-high);
+  }
+}
+
+/* --- Universal Floating Bottom Dock --- */
+.bottom-nav {
+  position: fixed; 
+  bottom: calc(24px + env(safe-area-inset-bottom)); 
+  left: 50%;
+  
+  width: calc(100% - 32px); 
+  max-width: 420px; 
+  height: 72px;
+  
+  background: var(--nav-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  
+  border-top: 1px solid var(--nav-border-top);
+  border-bottom: 1px solid var(--nav-border-bottom);
+  border-left: 1px solid var(--nav-border-top);
+  border-right: 1px solid var(--nav-border-bottom);
+  
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border-radius: 36px;
+  padding: 0 10px;
+  
+  animation: ambientFloat 6s ease-in-out infinite;
+  transition: background 0.5s ease, border-color 0.5s ease;
+  
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  z-index: 1000;
+}
+
+/* --- The Liquid Glass Indicator (Modern Squircle Tile) --- */
+.liquid-glass-indicator {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 54px;
+  background: var(--glass-grad); 
+  
+  /* 14px provides a structured 'squircle' feel instead of a pill */
+  border-radius: 14px; 
+  
+  box-shadow: var(--glass-rim), var(--glass-drop);
+  z-index: 1;
+  transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* --- Icons --- */
+.nav-item {
+  position: relative;
+  z-index: 2; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 54px;
+  height: 54px;
+  color: var(--icon-default); 
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.4s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  -webkit-user-drag: none;
+}
+
+.nav-item.active {
+  color: var(--icon-active);
+  transform: scale(1.05); 
+}
+
+.nav-item:active {
+  transform: scale(0.85);
+}
+
+.icon-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; 
+}
+
+.nav-item.active svg {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+[data-theme="dark"] .nav-item.active svg {
+  filter: drop-shadow(0 2px 4px rgba(255,255,255,0.4));
+}
